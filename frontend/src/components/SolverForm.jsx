@@ -15,6 +15,8 @@ import { fetchExamples } from '../services/api';
 export function SolverForm({
   variables,
   setVariables,
+  varNames,
+  setVarNames,
   mintermsInput,
   setMintermsInput,
   dontCaresInput,
@@ -114,6 +116,30 @@ export function SolverForm({
           <span>{variables} Variables = {Math.pow(2, variables)} total states (0..{maxMintermVal})</span>
           {variables === 5 && <span className="text-cyan-400 font-semibold">Dual 4x4 Subgrid View</span>}
         </p>
+      </div>
+
+      {/* Variable Names */}
+      <div>
+        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+          Variable Names
+        </label>
+        <div className="flex gap-1.5">
+          {varNames.map((name, idx) => (
+            <input
+              key={idx}
+              type="text"
+              value={name}
+              onChange={(e) => {
+                const next = [...varNames];
+                next[idx] = e.target.value.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 6);
+                setVarNames(next);
+              }}
+              className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-slate-900/90 border border-slate-800 text-white font-mono text-sm text-center placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              placeholder={String.fromCharCode(65 + idx)}
+            />
+          ))}
+        </div>
+        <p className="mt-1 text-[11px] text-slate-400">Default: A, B, C, ... — click to rename</p>
       </div>
 
       {/* Minterms Input */}

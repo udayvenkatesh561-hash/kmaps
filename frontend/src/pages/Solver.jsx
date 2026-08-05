@@ -15,6 +15,8 @@ export function Solver() {
   const {
     variables,
     setVariables,
+    varNames,
+    setVarNames,
     mintermsInput,
     setMintermsInput,
     dontCaresInput,
@@ -106,6 +108,8 @@ export function Solver() {
           <SolverForm
             variables={variables}
             setVariables={setVariables}
+            varNames={varNames}
+            setVarNames={setVarNames}
             mintermsInput={mintermsInput}
             setMintermsInput={setMintermsInput}
             dontCaresInput={dontCaresInput}

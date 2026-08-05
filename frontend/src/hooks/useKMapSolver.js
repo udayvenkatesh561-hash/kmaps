@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { solveKMap } from '../services/api';
 import { useHistory } from './useHistory';
 
+const DEFAULT_NAMES = ['A', 'B', 'C', 'D', 'E', 'F'];
+
 export function useKMapSolver() {
   const [variables, setVariables] = useState(4);
+  const [varNames, setVarNames] = useState(DEFAULT_NAMES.slice(0, 4));
   const [mintermsInput, setMintermsInput] = useState("0, 1, 2, 5, 7");
   const [dontCaresInput, setDontCaresInput] = useState("3");
   const [mode, setMode] = useState("SOP");
@@ -71,7 +74,8 @@ export function useKMapSolver() {
         variables: numVars,
         minterms,
         dont_cares: dontCares,
-        mode: curMode
+        mode: curMode,
+        var_names: overrides.varNames !== undefined ? overrides.varNames : varNames
       });
 
       setSolution(result);
@@ -86,7 +90,7 @@ export function useKMapSolver() {
     } finally {
       setLoading(false);
     }
-  }, [variables, mintermsInput, dontCaresInput, mode, addHistoryItem]);
+  }, [variables, mintermsInput, dontCaresInput, mode, varNames, addHistoryItem]);
 
   // Initial solve on mount or when variables change
   useEffect(() => {
@@ -95,7 +99,7 @@ export function useKMapSolver() {
 
   // Push current state to undo stack before mutation
   const pushStateToHistory = () => {
-    setHistoryStack(prev => [...prev, { variables, mintermsInput, dontCaresInput, mode }]);
+    setHistoryStack(prev => [...prev, { variables, varNames, mintermsInput, dontCaresInput, mode }]);
     setRedoStack([]);
   };
 
@@ -142,17 +146,19 @@ export function useKMapSolver() {
       variables,
       mintermsInput: mStr,
       dontCaresInput: dcStr,
-      mode
+      mode,
+      varNames
     });
   };
 
   const handleUndo = () => {
     if (historyStack.length === 0) return;
     const last = historyStack[historyStack.length - 1];
-    setRedoStack(prev => [...prev, { variables, mintermsInput, dontCaresInput, mode }]);
+    setRedoStack(prev => [...prev, { variables, varNames, mintermsInput, dontCaresInput, mode }]);
     setHistoryStack(prev => prev.slice(0, -1));
 
     setVariables(last.variables);
+    setVarNames(last.varNames);
     setMintermsInput(last.mintermsInput);
     setDontCaresInput(last.dontCaresInput);
     setMode(last.mode);
@@ -163,10 +169,11 @@ export function useKMapSolver() {
   const handleRedo = () => {
     if (redoStack.length === 0) return;
     const next = redoStack[redoStack.length - 1];
-    setHistoryStack(prev => [...prev, { variables, mintermsInput, dontCaresInput, mode }]);
+    setHistoryStack(prev => [...prev, { variables, varNames, mintermsInput, dontCaresInput, mode }]);
     setRedoStack(prev => prev.slice(0, -1));
 
     setVariables(next.variables);
+    setVarNames(next.varNames);
     setMintermsInput(next.mintermsInput);
     setDontCaresInput(next.dontCaresInput);
     setMode(next.mode);
@@ -175,7 +182,6 @@ export function useKMapSolver() {
   };
 
   const loadExample = (example) => {
-    pushStateToHistory();
     setVariables(example.variables);
     const mStr = (example.minterms || []).join(', ');
     const dcStr = (example.dont_cares || []).join(', ');
@@ -203,9 +209,14 @@ export function useKMapSolver() {
     setVariables: (num) => {
       pushStateToHistory();
       setVariables(num);
+      setVarNames(DEFAULT_NAMES.slice(0, num));
       // Clamp inputs if needed
       setMintermsInput("");
       setDontCaresInput("");
+    },
+    varNames,
+    setVarNames: (names) => {
+      setVarNames(names);
     },
     mintermsInput,
     setMintermsInput,

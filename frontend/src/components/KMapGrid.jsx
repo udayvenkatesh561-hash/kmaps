@@ -20,7 +20,7 @@ export function KMapGrid({ kmapData, groups, hoveredGroupId, onToggleCell }) {
 
   // Render a single grid matrix
   const renderSingleMatrix = (matrix, title, subgridIndex = 0) => (
-    <div className="overflow-x-auto pb-2">
+    <div className="overflow-x-auto h-full">
       {title && (
         <div className="mb-3 text-center">
           <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-mono text-xs font-bold shadow-md">
@@ -29,7 +29,7 @@ export function KMapGrid({ kmapData, groups, hoveredGroupId, onToggleCell }) {
         </div>
       )}
 
-      <table className="w-full border-collapse">
+      <table className="w-full h-full border-collapse">
         <thead>
           <tr>
             {/* Top-Left Corner Header */}
@@ -65,7 +65,7 @@ export function KMapGrid({ kmapData, groups, hoveredGroupId, onToggleCell }) {
 
               {/* Grid Cells */}
               {rowCells.map((cell) => (
-                <td key={cell.minterm_index} className="p-px border border-slate-800/80">
+                <td key={cell.minterm_index} className="p-0 border border-slate-800/80">
                   <KMapCell
                     cell={cell}
                     onToggle={onToggleCell}

@@ -24,7 +24,7 @@ export function KMapCell({ cell, onToggle, highlightedGroupColor }) {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={() => onToggle(minterm_index)}
-      className={`relative flex flex-col items-center justify-center p-px min-h-[42px] sm:min-h-[48px] rounded border transition-all cursor-pointer select-none group ${valueStyle}`}
+      className={`relative flex flex-col items-center justify-center w-full h-full p-0.5 rounded border transition-all cursor-pointer select-none group ${valueStyle}`}
       style={{
         borderColor: isHovered ? highlightedGroupColor : undefined,
         boxShadow: isHovered ? `0 0 20px ${highlightedGroupColor}66` : undefined,
