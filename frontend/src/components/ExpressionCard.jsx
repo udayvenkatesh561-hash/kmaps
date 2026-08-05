@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Copy, Check, Download, Share2, ShieldCheck, Sparkles, Code2 } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function ExpressionCard({ solution }) {
+  const { dark } = useTheme();
   const [copiedText, setCopiedText] = useState(false);
   const [copiedLatex, setCopiedLatex] = useState(false);
 
@@ -29,7 +31,7 @@ export function ExpressionCard({ solution }) {
   };
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-indigo-500/30 shadow-glow-primary space-y-5 relative overflow-hidden">
+    <div className={`glass-panel p-6 rounded-2xl border shadow-glow-primary space-y-5 relative overflow-hidden ${dark ? 'border-indigo-500/30' : 'border-indigo-300/50'}`}>
       
       {/* Top Accent Gradient Line */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
@@ -41,8 +43,8 @@ export function ExpressionCard({ solution }) {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">Simplified Boolean Solution</h3>
-            <p className="text-xs text-slate-400">Minimal equation in {mode} representation</p>
+            <h3 className={`text-base font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>Simplified Boolean Solution</h3>
+            <p className={`text-xs ${dark ? 'text-slate-400' : 'text-slate-500'}`}>Minimal equation in {mode} representation</p>
           </div>
         </div>
 
@@ -56,8 +58,8 @@ export function ExpressionCard({ solution }) {
       </div>
 
       {/* Main Equation Box */}
-      <div className="p-6 rounded-xl bg-slate-900/90 border border-slate-800 text-center relative group">
-        <div className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">
+      <div className={`p-6 rounded-xl border text-center relative group ${dark ? 'bg-slate-900/90 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+        <div className={`text-xs font-mono uppercase tracking-wider mb-2 ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
           F({solution.var_names ? solution.var_names.join(', ') : 'vars'}) =
         </div>
 
@@ -66,15 +68,15 @@ export function ExpressionCard({ solution }) {
         </div>
 
         {/* Both SOP & POS Formats */}
-        <div className="mt-4 pt-4 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left font-mono text-xs">
-          <div className="p-2.5 rounded-lg bg-slate-800/50 border border-slate-800">
-            <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Sum of Products (SOP)</span>
-            <span className="text-white font-semibold">{expression_sop}</span>
+        <div className={`mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-2 gap-3 text-left font-mono text-xs ${dark ? 'border-slate-800/80' : 'border-slate-200'}`}>
+          <div className={`p-2.5 rounded-lg border ${dark ? 'bg-slate-800/50 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+            <span className={`text-[10px] uppercase font-bold block mb-1 ${dark ? 'text-slate-400' : 'text-slate-500'}`}>Sum of Products (SOP)</span>
+            <span className={`${dark ? 'text-white' : 'text-slate-900'} font-semibold`}>{expression_sop}</span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-slate-800/50 border border-slate-800">
-            <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Product of Sums (POS)</span>
-            <span className="text-white font-semibold">{expression_pos}</span>
+          <div className={`p-2.5 rounded-lg border ${dark ? 'bg-slate-800/50 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+            <span className={`text-[10px] uppercase font-bold block mb-1 ${dark ? 'text-slate-400' : 'text-slate-500'}`}>Product of Sums (POS)</span>
+            <span className={`${dark ? 'text-white' : 'text-slate-900'} font-semibold`}>{expression_pos}</span>
           </div>
         </div>
       </div>
@@ -92,7 +94,7 @@ export function ExpressionCard({ solution }) {
 
           <button
             onClick={handleCopyLatex}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-all flex items-center space-x-1.5"
+            className={`px-3.5 py-2 rounded-xl font-semibold text-xs border transition-all flex items-center space-x-1.5 ${dark ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}`}
           >
             {copiedLatex ? <Check className="w-4 h-4 text-emerald-300" /> : <Code2 className="w-4 h-4 text-cyan-400" />}
             <span>{copiedLatex ? 'LaTeX Copied!' : 'LaTeX'}</span>
@@ -102,7 +104,7 @@ export function ExpressionCard({ solution }) {
         <div className="flex items-center space-x-2">
           <button
             onClick={handleShare}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition-all flex items-center space-x-1.5"
+            className={`px-3.5 py-2 rounded-xl font-semibold text-xs border transition-all flex items-center space-x-1.5 ${dark ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'}`}
           >
             <Share2 className="w-4 h-4" />
             <span>Share</span>

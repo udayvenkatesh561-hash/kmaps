@@ -1,32 +1,34 @@
 import React from 'react';
 import { BookOpen, Cpu, Grid, Layers, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function About() {
+  const { dark } = useTheme();
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       
       {/* Title */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
+        <div className={`inline-flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-semibold ${dark ? 'bg-indigo-500/10 border border-indigo-500/30 text-indigo-300' : 'bg-indigo-50 border border-indigo-200 text-indigo-700'}`}>
           <BookOpen className="w-4 h-4 text-cyan-400" />
           <span>Educational Documentation & Theory</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className={`text-3xl sm:text-5xl font-extrabold tracking-tight ${dark ? 'text-white' : 'text-slate-900'}`}>
           Understanding Karnaugh Maps
         </h1>
-        <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
+        <p className={`text-base sm:text-lg max-w-2xl mx-auto ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
           A comprehensive guide to Boolean algebra minimization, Gray code matrix representation, and wrap-around grouping logic.
         </p>
       </div>
 
       {/* Article Cards */}
-      <div className="space-y-8 text-slate-300 text-sm leading-relaxed">
+      <div className={`space-y-8 text-sm leading-relaxed ${dark ? 'text-slate-300' : 'text-slate-600'}`}>
         
         {/* Card 1: What is a K-Map */}
-        <section className="glass-panel p-6 rounded-2xl border border-slate-800/80 space-y-3">
+        <section className={`glass-panel p-6 rounded-2xl border space-y-3 ${dark ? 'border-slate-800/80' : 'border-slate-200'}`}>
           <div className="flex items-center space-x-3 text-indigo-400">
             <Grid className="w-6 h-6" />
-            <h2 className="text-xl font-bold text-white">What is a Karnaugh Map?</h2>
+            <h2 className={`text-xl font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>What is a Karnaugh Map?</h2>
           </div>
           <p>
             Invented by Maurice Karnaugh in 1953, a <strong>Karnaugh Map (K-Map)</strong> is a graphical technique used in digital design to simplify Boolean algebraic expressions into minimal Sum-of-Products (SOP) or Product-of-Sums (POS) forms.
@@ -37,15 +39,15 @@ export function About() {
         </section>
 
         {/* Card 2: Gray Code Adjacency */}
-        <section className="glass-panel p-6 rounded-2xl border border-slate-800/80 space-y-3">
+        <section className={`glass-panel p-6 rounded-2xl border space-y-3 ${dark ? 'border-slate-800/80' : 'border-slate-200'}`}>
           <div className="flex items-center space-x-3 text-purple-400">
             <Zap className="w-6 h-6" />
-            <h2 className="text-xl font-bold text-white">Gray Code Ordering & Adjacency</h2>
+            <h2 className={`text-xl font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>Gray Code Ordering & Adjacency</h2>
           </div>
           <p>
             Standard binary ordering (00, 01, 10, 11) is <em>not</em> used in K-Maps because changing from 01 to 10 changes two bits simultaneously. Instead, K-Maps use <strong>Gray Code ordering</strong>:
           </p>
-          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 font-mono text-xs text-cyan-300">
+          <div className={`p-4 rounded-xl border font-mono text-xs text-cyan-300 ${dark ? 'bg-slate-900/90 border-slate-800' : 'bg-slate-50 border-slate-200 text-cyan-700'}`}>
             00 → 01 → 11 → 10
           </div>
           <p>
@@ -56,10 +58,10 @@ export function About() {
         </section>
 
         {/* Card 3: Grouping Rules */}
-        <section className="glass-panel p-6 rounded-2xl border border-slate-800/80 space-y-3">
+        <section className={`glass-panel p-6 rounded-2xl border space-y-3 ${dark ? 'border-slate-800/80' : 'border-slate-200'}`}>
           <div className="flex items-center space-x-3 text-cyan-400">
             <Layers className="w-6 h-6" />
-            <h2 className="text-xl font-bold text-white">Rules of K-Map Grouping</h2>
+            <h2 className={`text-xl font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>Rules of K-Map Grouping</h2>
           </div>
           <ul className="list-disc pl-5 space-y-2 text-slate-300">
             <li><strong>Power of 2 Group Sizes:</strong> Groups must contain $2^k$ cells (1, 2, 4, 8, 16 cells).</li>
@@ -71,20 +73,20 @@ export function About() {
         </section>
 
         {/* Card 4: 5-Variable K-Maps */}
-        <section className="glass-panel p-6 rounded-2xl border border-slate-800/80 space-y-3">
+        <section className={`glass-panel p-6 rounded-2xl border space-y-3 ${dark ? 'border-slate-800/80' : 'border-slate-200'}`}>
           <div className="flex items-center space-x-3 text-emerald-400">
             <Sparkles className="w-6 h-6" />
-            <h2 className="text-xl font-bold text-white">5-Variable K-Maps (Dual Subgrids)</h2>
+            <h2 className={`text-xl font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>5-Variable K-Maps (Dual Subgrids)</h2>
           </div>
           <p>
             A 5-variable function $F(A, B, C, D, E)$ has $2^5 = 32$ minterms. We visualize this using <strong>two 4x4 sub-maps</strong> placed side-by-side:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 font-mono text-xs">
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <div className={`p-3 rounded-xl border ${dark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
               <span className="text-indigo-400 font-bold block mb-1">Subgrid 1: A = 0 (A')</span>
               <span>4x4 matrix for BC \ DE (minterms 0..15)</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <div className={`p-3 rounded-xl border ${dark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
               <span className="text-purple-400 font-bold block mb-1">Subgrid 2: A = 1 (A)</span>
               <span>4x4 matrix for BC \ DE (minterms 16..31)</span>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useKMapSolver } from '../hooks/useKMapSolver';
+import { useTheme } from '../contexts/ThemeContext';
 import { SolverForm } from '../components/SolverForm';
 import { KMapGrid } from '../components/KMapGrid';
 import { GroupLegend } from '../components/GroupLegend';
@@ -12,6 +13,7 @@ import { LogicGateDiagram } from '../components/LogicGateDiagram';
 import { Grid, Table, BookOpen, Sparkles } from 'lucide-react';
 
 export function Solver() {
+  const { dark } = useTheme();
   const {
     variables,
     setVariables,
@@ -50,26 +52,28 @@ export function Solver() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-4">
 
       {/* Studio Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className={`flex flex-col md:flex-row md:items-center justify-between gap-3 border-b pb-4 ${dark ? 'border-slate-800' : 'border-slate-200'}`}>
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center space-x-3">
+          <h1 className={`text-xl sm:text-2xl font-extrabold tracking-tight flex items-center space-x-3 ${dark ? 'text-white' : 'text-slate-900'}`}>
             <span>K-Map Interactive Solver</span>
             <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-bold">
               {variables} Variables
             </span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className={`text-sm mt-1 ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
             Click any cell on the matrix to toggle state live or enter minterms in the form.
           </p>
         </div>
 
         {/* View Mode Tabs */}
-        <div className="flex items-center space-x-1 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 self-start md:self-auto">
+        <div className={`flex items-center space-x-1 p-1.5 rounded-2xl border self-start md:self-auto ${dark ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-100 border-slate-200'}`}>
           <button
             onClick={() => setActiveTab("kmap")}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "kmap"
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                : dark
+                  ? 'text-slate-400 hover:text-white'
+                  : 'text-slate-500 hover:text-slate-900'
               }`}
           >
             <Grid className="w-4 h-4" />
@@ -80,7 +84,9 @@ export function Solver() {
             onClick={() => setActiveTab("truth_table")}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "truth_table"
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                : dark
+                  ? 'text-slate-400 hover:text-white'
+                  : 'text-slate-500 hover:text-slate-900'
               }`}
           >
             <Table className="w-4 h-4" />
@@ -91,7 +97,9 @@ export function Solver() {
             onClick={() => setActiveTab("steps")}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "steps"
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                : dark
+                  ? 'text-slate-400 hover:text-white'
+                  : 'text-slate-500 hover:text-slate-900'
               }`}
           >
             <BookOpen className="w-4 h-4" />
