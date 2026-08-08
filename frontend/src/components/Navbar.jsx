@@ -1,11 +1,24 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Cpu, Github, BookOpen, Layers, Sparkles, Sun, Moon } from 'lucide-react';
+import { Cpu, Github, BookOpen, Layers, Sparkles, Sun, Moon, Binary, CircuitBoard, Table2, Braces, GraduationCap, Menu, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useState } from 'react';
+
+const NAV_ITEMS = [
+  { to: '/', icon: Sparkles, label: 'Home' },
+  { to: '/solver', icon: Layers, label: 'K-Map Calculator' },
+  { to: '/numbersystem', icon: Binary, label: 'Number Systems' },
+  { to: '/logic-gates', icon: CircuitBoard, label: 'Logic Gates' },
+  { to: '/truth-table', icon: Table2, label: 'Truth Table' },
+  { to: '/boolean-algebra', icon: Braces, label: 'Boolean Algebra' },
+  { to: '/learning', icon: GraduationCap, label: 'Learning Center' },
+  { to: '/about', icon: BookOpen, label: 'About' },
+];
 
 export function Navbar() {
   const location = useLocation();
   const { dark, toggleTheme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
 
@@ -22,62 +35,36 @@ export function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className={`text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r tracking-tight ${dark ? 'from-white via-slate-200 to-slate-400' : 'from-slate-900 via-slate-700 to-slate-500'}`}>
-              K-Map Solver
+              DigiLogic
             </span>
             <span className="text-[10px] text-cyan-400 font-mono tracking-wider uppercase font-semibold">
-              Boolean Architecture
+              Digital Logic Toolkit
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className={`hidden md:flex items-center space-x-1 p-1.5 rounded-full border transition-colors duration-200 ${dark ? 'bg-slate-900/60 border-slate-800/80' : 'bg-slate-100 border-slate-200'}`}>
-          <Link
-            to="/"
-            className={`flex items-center space-x-2 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              isActive('/') 
-                ? 'bg-indigo-600 text-white shadow-md' 
-                : dark
-                  ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Home</span>
-          </Link>
-
-          <Link
-            to="/solver"
-            className={`flex items-center space-x-2 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              isActive('/solver') 
-                ? 'bg-indigo-600 text-white shadow-md' 
-                : dark
-                  ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>Interactive Solver</span>
-          </Link>
-
-          <Link
-            to="/about"
-            className={`flex items-center space-x-2 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              isActive('/about') 
-                ? 'bg-indigo-600 text-white shadow-md' 
-                : dark
-                  ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Theory & Docs</span>
-          </Link>
+        {/* Desktop Navigation */}
+        <nav className={`hidden lg:flex items-center space-x-1 p-1.5 rounded-full border transition-colors duration-200 ${dark ? 'bg-slate-900/60 border-slate-800/80' : 'bg-slate-100 border-slate-200'}`}>
+          {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                isActive(to)
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : dark
+                    ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span className="hidden xl:inline">{label}</span>
+            </Link>
+          ))}
         </nav>
 
         {/* Action Buttons */}
         <div className="flex items-center space-x-2">
-          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className={`p-2 rounded-xl transition-all ${dark ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/80' : 'bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200'}`}
@@ -90,20 +77,46 @@ export function Navbar() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center space-x-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:scale-105 ${dark ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'}`}
+            className={`hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:scale-105 ${dark ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'}`}
           >
             <Github className="w-4 h-4" />
-            <span className="hidden sm:inline">GitHub</span>
+            <span>GitHub</span>
           </a>
 
-          <Link
-            to="/solver"
-            className="md:hidden flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-glow-primary"
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className={`lg:hidden p-2 rounded-xl transition-all ${dark ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/80' : 'bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200'}`}
           >
-            <span>Solver</span>
-          </Link>
+            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Dropdown */}
+      {mobileOpen && (
+        <div className={`lg:hidden border-t transition-colors duration-200 ${dark ? 'bg-[#0F172A]/95 border-slate-800/80' : 'bg-white/95 border-slate-200/80'}`}>
+          <nav className="max-w-7xl mx-auto px-4 py-3 space-y-1">
+            {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  isActive(to)
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : dark
+                      ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{label}</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

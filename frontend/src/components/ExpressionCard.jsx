@@ -1,33 +1,71 @@
-import React, { useState } from 'react';
-import { Copy, Check, Download, Share2, ShieldCheck, Sparkles, Code2 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Copy, Check, Download, Share2, ShieldCheck, Sparkles, Code2, Zap, CircuitBoard, Info } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useToast } from '../contexts/ToastContext';
+
+function countGates(expression) {
+  if (!expression) return { and: 0, or: 0, not: 0, total: 0 };
+  const andCount = (expression.match(/&/g) || []).length;
+  const orCount = (expression.match(/\|/g) || []).length;
+  const notCount = (expression.match(/!/g) || []).length;
+  return {
+    and: andCount + (expression.match(/\*/g) || []).length,
+    or: orCount + (expression.match(/\+/g) || []).length,
+    not: notCount + (expression.match(/'/g) || []).length,
+    total: andCount + orCount + notCount,
+  };
+}
+
+function toNAND(expression) {
+  if (!expression) return '';
+  let result = expression;
+  result = result.replace(/([^&|]+)&([^&|]+)/g, 'NAND($1, $2)');
+  result = result.replace(/([^&|]+)\|([^&|]+)/g, 'NAND(NAND($1, $1), NAND($2, $2))');
+  return result;
+}
+
+function toNOR(expression) {
+  if (!expression) return '';
+  let result = expression;
+  result = result.replace(/([^&|]+)\|([^&|]+)/g, 'NOR($1, $2)');
+  result = result.replace(/([^&|]+)&([^&|]+)/g, 'NOR(NOR($1, $1), NOR($2, $2))');
+  return result;
+}
 
 export function ExpressionCard({ solution }) {
   const { dark } = useTheme();
+  const toast = useToast();
   const [copiedText, setCopiedText] = useState(false);
   const [copiedLatex, setCopiedLatex] = useState(false);
+  const [showCircuit, setShowCircuit] = useState(false);
 
   if (!solution) return null;
 
   const { expression_sop, expression_pos, expression_latex, mode, sympy_verified, variables } = solution;
   const currentExpression = mode === "SOP" ? expression_sop : expression_pos;
 
+  const gateStats = useMemo(() => countGates(currentExpression), [currentExpression]);
+  const nandExpr = useMemo(() => toNAND(currentExpression), [currentExpression]);
+  const norExpr = useMemo(() => toNOR(currentExpression), [currentExpression]);
+
   const handleCopyText = () => {
     navigator.clipboard.writeText(currentExpression);
     setCopiedText(true);
+    toast('Expression copied to clipboard', 'success');
     setTimeout(() => setCopiedText(false), 2000);
   };
 
   const handleCopyLatex = () => {
     navigator.clipboard.writeText(expression_latex);
     setCopiedLatex(true);
+    toast('LaTeX copied to clipboard', 'success');
     setTimeout(() => setCopiedLatex(false), 2000);
   };
 
   const handleShare = () => {
     const shareUrl = window.location.href;
     navigator.clipboard.writeText(shareUrl);
-    alert("Shareable URL copied to clipboard!");
+    toast('Shareable URL copied to clipboard', 'success');
   };
 
   return (
@@ -81,7 +119,63 @@ export function ExpressionCard({ solution }) {
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Circuit Cost & Gate Count */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className={`p-3 rounded-xl border text-center ${dark ? 'bg-slate-700/30 border-slate-600/30' : 'bg-slate-50 border-slate-200'}`}>
+          <Zap className="w-4 h-4 mx-auto mb-1 text-amber-400" />
+          <div className={`text-lg font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>{gateStats.total}</div>
+          <div className={`text-[10px] ${dark ? 'text-slate-500' : 'text-slate-400'}`}>Total Gates</div>
+        </div>
+        <div className={`p-3 rounded-xl border text-center ${dark ? 'bg-slate-700/30 border-slate-600/30' : 'bg-slate-50 border-slate-200'}`}>
+          <div className="text-sm font-mono mb-1 text-indigo-400">&amp;</div>
+          <div className={`text-lg font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>{gateStats.and}</div>
+          <div className={`text-[10px] ${dark ? 'text-slate-500' : 'text-slate-400'}`}>AND Gates</div>
+        </div>
+        <div className={`p-3 rounded-xl border text-center ${dark ? 'bg-slate-700/30 border-slate-600/30' : 'bg-slate-50 border-slate-200'}`}>
+          <div className="text-sm font-mono mb-1 text-purple-400">|</div>
+          <div className={`text-lg font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>{gateStats.or}</div>
+          <div className={`text-[10px] ${dark ? 'text-slate-500' : 'text-slate-400'}`}>OR Gates</div>
+        </div>
+        <div className={`p-3 rounded-xl border text-center ${dark ? 'bg-slate-700/30 border-slate-600/30' : 'bg-slate-50 border-slate-200'}`}>
+          <div className="text-sm font-mono mb-1 text-red-400">!</div>
+          <div className={`text-lg font-bold ${dark ? 'text-white' : 'text-slate-900'}`}>{gateStats.not}</div>
+          <div className={`text-[10px] ${dark ? 'text-slate-500' : 'text-slate-400'}`}>NOT Gates</div>
+        </div>
+      </div>
+
+      {/* NAND/NOR Equivalents Toggle */}
+      <div>
+        <button
+          onClick={() => setShowCircuit(!showCircuit)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            showCircuit
+              ? 'bg-cyan-600 text-white'
+              : dark
+                ? 'bg-slate-800/50 text-slate-400 hover:text-white border border-slate-700/50'
+                : 'bg-white/50 text-slate-500 hover:text-slate-900 border border-slate-200/50'
+          }`}
+        >
+          <CircuitBoard className="w-4 h-4" />
+          {showCircuit ? 'Hide' : 'Show'} NAND/NOR Equivalents
+        </button>
+        
+        {showCircuit && (
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className={`p-3 rounded-xl border ${dark ? 'bg-slate-800/30 border-slate-700/30' : 'bg-slate-50 border-slate-200'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">NAND-Only</span>
+              </div>
+              <p className="text-xs font-mono break-all">{nandExpr}</p>
+            </div>
+            <div className={`p-3 rounded-xl border ${dark ? 'bg-slate-800/30 border-slate-700/30' : 'bg-slate-50 border-slate-200'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">NOR-Only</span>
+              </div>
+              <p className="text-xs font-mono break-all">{norExpr}</p>
+            </div>
+          </div>
+        )}
+      </div>{/* Action Buttons */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
         <div className="flex items-center space-x-2">
           <button

@@ -6,6 +6,11 @@ import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { Solver } from './pages/Solver';
 import { About } from './pages/About';
+import { NumberSystem } from './pages/NumberSystem';
+import { LogicGateSimulator } from './pages/LogicGateSimulator';
+import { TruthTableGenerator } from './pages/TruthTableGenerator';
+import { BooleanAlgebra } from './pages/BooleanAlgebra';
+import { LearningCenter } from './pages/LearningCenter';
 
 export function App() {
   const { dark } = useTheme();
@@ -18,6 +23,11 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/solver" element={<Solver />} />
+          <Route path="/numbersystem" element={<NumberSystem />} />
+          <Route path="/logic-gates" element={<LogicGateSimulator />} />
+          <Route path="/truth-table" element={<TruthTableGenerator />} />
+          <Route path="/boolean-algebra" element={<BooleanAlgebra />} />
+          <Route path="/learning" element={<LearningCenter />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </main>
